@@ -23,60 +23,7 @@
         
 
         
-        /* 页面标题栏 */
-        .header {
-            background: #fff;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-        
-        .back-button {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: transparent;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-        }
-        
-        .header-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-        
-        .more-button {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: transparent;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-        }
+
         
         /* 主要内容区域 */
         .content {
@@ -305,20 +252,7 @@
 <body>
 
     
-    <!-- 页面标题栏 -->
-    <div class="header">
-        <div class="header-left">
-            <button class="back-button">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="header-title">审批详情</div>
-        </div>
-        <div class="header-right">
-            <button class="more-button">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-        </div>
-    </div>
+
     
     <!-- 主要内容区域 -->
     <div class="content">
@@ -394,18 +328,6 @@
     <script>
         // 简单的交互效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 后退按钮
-            document.querySelector('.back-button').addEventListener('click', function() {
-                // 这里可以添加返回上一页的逻辑
-                alert('返回上一页');
-            });
-            
-            // 更多按钮
-            document.querySelector('.more-button').addEventListener('click', function() {
-                // 这里可以添加更多操作的逻辑
-                alert('更多操作');
-            });
-            
             // 撤销按钮
             document.querySelector('.cancel-button').addEventListener('click', function() {
                 // 这里可以添加撤销操作的逻辑
@@ -428,21 +350,8 @@
             // Banner点击跳转千问APP
             document.querySelector('#bannerLink').addEventListener('click', function(e) {
                 e.preventDefault();
-                // 尝试打开千问APP（使用通用的URL scheme）
-                const appUrl = 'qianwen://';
-                const fallbackUrl = 'https://apps.apple.com/app/id123456789'; // 替换为实际的应用商店链接
-                
-                // 创建一个隐藏的iframe来尝试打开APP
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = appUrl;
-                document.body.appendChild(iframe);
-                
-                // 设置一个定时器，如果在一定时间内没有打开APP，则跳转到应用商店
-                setTimeout(function() {
-                    document.body.removeChild(iframe);
-                    window.location.href = fallbackUrl;
-                }, 1000);
+                // 跳转到千问APP的移动端地址
+                window.location.href = 'https://m.tongyi.com/app/tongyi/tongyi-hybrid/download-guide?app_url=tongyi%3A%2F%2F%3Fsid%3Dundefined%26source_type%3Dscheme';
             });
         });
     </script>
