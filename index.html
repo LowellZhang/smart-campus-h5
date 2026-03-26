@@ -233,6 +233,17 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
         
+        /* 催办按钮底部的灰色区域 */
+        .fixed-remind-button::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: #f5f5f5;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 480px) {
             .content {
@@ -261,7 +272,7 @@
             <div class="user-info">
                 <div style="display: flex; align-items: center;">
                     <div class="user-avatar">妈妈</div>
-                    <span class="user-name">布小谷001妈妈</span>
+                    <span class="user-name">陈欣悦妈妈</span>
                 </div>
                 <button class="cancel-button">撤销</button>
             </div>
