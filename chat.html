@@ -80,37 +80,63 @@
             cursor: pointer;
         }
         
-        /* Banner部分 */
-        .banner-container {
-            position: relative;
-            padding: 12px;
-            background: #f5f5f5;
+        /* 千问推广条 */
+        .promo-bar {
+            background: linear-gradient(135deg, #F0F0FF 0%, #E6D7F0 100%);
             border-bottom: 1px solid #eee;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
         }
         
-        .banner-content {
-            position: relative;
-        }
-        
-        .banner-image {
+        .promo-content {
+            display: flex;
+            align-items: center;
             width: 100%;
-            border-radius: 8px;
+            gap: 10px;
         }
         
-        .close-button {
-            position: absolute;
-            top: 8px;
-            right: 8px;
+        .promo-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .promo-logo img {
+            height: 24px;
+            width: auto;
+        }
+        
+        .promo-text {
+            flex: 1;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .promo-button {
+            background: #9370DB;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .promo-close {
             width: 24px;
             height: 24px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
             cursor: pointer;
+            color: #666;
         }
         
         /* 聊天内容区域 */
@@ -293,11 +319,17 @@
         </div>
     </div>
     
-    <!-- Banner部分 -->
-    <div class="banner-container" id="bannerContainer">
-        <div class="banner-content">
-            <img src="images/banner.png" alt="千问APP" class="banner-image" />
-            <div class="close-button" id="closeButton">
+    <!-- 千问推广条 -->
+    <div class="promo-bar" id="promoBar">
+        <div class="promo-content">
+            <div class="promo-logo">
+                <img src="images/千问logo.png" alt="千问" />
+            </div>
+            <div class="promo-text">
+                千问 - 助力家长辅助孩子成长
+            </div>
+            <button class="promo-button">去下载</button>
+            <div class="promo-close" id="promoClose">
                 <i class="fas fa-times"></i>
             </div>
         </div>
@@ -370,17 +402,14 @@
             
 
             
-            // 关闭banner
-            document.getElementById('closeButton').addEventListener('click', function() {
-                document.getElementById('bannerContainer').style.display = 'none';
+            // 关闭推广条
+            document.getElementById('promoClose').addEventListener('click', function() {
+                document.getElementById('promoBar').style.display = 'none';
             });
             
-            // Banner点击跳转
-            document.querySelector('.banner-content').addEventListener('click', function(e) {
-                // 避免点击关闭按钮时也触发跳转
-                if (e.target !== document.getElementById('closeButton') && !document.getElementById('closeButton').contains(e.target)) {
-                    window.location.href = 'https://m.tongyi.com/app/tongyi/tongyi-hybrid/download-guide?app_url=tongyi%3A%2F%2F%3Fsid%3Dundefined%26source_type%3Dscheme';
-                }
+            // 下载按钮点击跳转
+            document.querySelector('.promo-button').addEventListener('click', function() {
+                window.location.href = 'https://m.tongyi.com/app/tongyi/tongyi-hybrid/download-guide?app_url=tongyi%3A%2F%2F%3Fsid%3Dundefined%26source_type%3Dscheme';
             });
         });
     </script>
