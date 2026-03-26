@@ -25,60 +25,7 @@
         
 
         
-        /* 页面标题栏 */
-        .header {
-            background: #fff;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-        
-        .back-button {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: transparent;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-        }
-        
-        .header-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-        
-        .more-button {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: transparent;
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-        }
+
         
         /* 千问推广条 */
         .promo-bar {
@@ -304,20 +251,7 @@
 <body>
 
     
-    <!-- 页面标题栏 -->
-    <div class="header">
-        <div class="header-left">
-            <button class="back-button">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="header-title">张三的家庭群</div>
-        </div>
-        <div class="header-right">
-            <button class="more-button">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-        </div>
-    </div>
+
     
     <!-- 千问推广条 -->
     <div class="promo-bar" id="promoBar">
@@ -370,16 +304,6 @@
     <script>
         // 简单的交互效果
         document.addEventListener('DOMContentLoaded', function() {
-            // 后退按钮
-            document.querySelector('.back-button').addEventListener('click', function() {
-                alert('返回上一页');
-            });
-            
-            // 更多按钮
-            document.querySelector('.more-button').addEventListener('click', function() {
-                alert('更多操作');
-            });
-            
             // 发送按钮
             document.querySelector('.send-button').addEventListener('click', function() {
                 const input = document.getElementById('messageInput');
