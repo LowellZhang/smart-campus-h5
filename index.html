@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>智能体对话框</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .agent-info h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .agent-info p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 15px 80px;
+            display: flex;
+            flex-direction: column;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            max-width: 85%;
+        }
+        
+        .message.agent {
+            align-self: flex-start;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .agent .avatar {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            margin-right: 10px;
+        }
+        
+        .user .avatar {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            margin-left: 10px;
+        }
+        
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .agent .message-content {
+            background: white;
+            border-top-left-radius: 5px;
+        }
+        
+        .user .message-content {
+            background: #DCF8C6;
+            border-top-right-radius: 5px;
+            color: #333;
+        }
+        
+        .message-text {
+            font-size: 15px;
+            word-break: break-word;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .user .message-time {
+            text-align: left;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #aaa;
+            margin-right: 4px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+        
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid #eee;
+            backdrop-filter: blur(10px);
+        }
+        
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #f0f0f0;
+            border-radius: 24px;
+            padding: 8px 15px;
+        }
+        
+        .message-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            padding: 8px 0;
+            font-family: inherit;
+        }
+        
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .icon-button:hover, .icon-button:active {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .send-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            width: 44px;
+            height: 44px;
+        }
+        
+        .send-button:active {
+            transform: scale(0.95);
+        }
+        
+        .welcome-text {
+            text-align: center;
+            color: white;
+            padding: 20px 0;
+            font-size: 14px;
+        }
+        
+        .date-divider {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 12px;
+            color: #999;
+            position: relative;
+        }
+        
+        .date-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+        
+        .date-divider span {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 4px 12px;
+            border-radius: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        @media (max-width: 480px) {
+            .message {
+                max-width: 90%;
+            }
+            
+            .header {
+                padding: 12px 15px;
+            }
+        }
+        
+        /* 滚动条样式 */
+        .chat-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题栏 -->
+    <div class="header">
+        <div class="header-left">
+            <div class="agent-avatar">AI</div>
+            <div class="agent-info">
+                <h2>智能助手元宝</h2>
+                <p><span class="status"></span>在线 · 由腾讯AI提供支持</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 聊天内容区域 -->
+    <div class="chat-container" id="chatContainer">
+        <!-- 欢迎消息 -->
+        <div class="welcome-text">
+            今天 10:30
+        </div>
+        
+        <!-- 日期分隔 -->
+        <div class="date-divider">
+            <span>2026年3月26日 星期四</span>
+        </div>
+        
+        <!-- 智能体消息 -->
+        <div class="message agent">
+            <div class="avatar">AI</div>
+            <div class="message-content">
+                <div class="message-text">您好！我是智能助手元宝，很高兴为您服务。今天是丙午马年二月初八，有什么我可以帮助您的吗？</div>
+                <div class="message-time">10:30</div>
+            </div>
+        </div>
+        
+        <!-- 用户消息 -->
+        <div class="message user">
+            <div class="avatar">我</div>
+            <div class="message-content">
+                <div class="message-text">你好，能告诉我今年是什么年份吗？</div>
+                <div class="message-time">10:31</div>
+            </div>
+        </div>
+        
+        <!-- 智能体消息 -->
+        <div class="message agent">
+            <div class="avatar">AI</div>
+            <div class="message-content">
+                <div class="message-text">今年是2026年，农历丙午马年。春节是2月17日，元宵节是3月3日。我们已经进入马年一段时间了。</div>
+                <div class="message-time">10:31</div>
+            </div>
+        </div>
+        
+        <!-- 用户消息 -->
+        <div class="message user">
+            <div class="avatar">我</div>
+            <div class="message-content">
+                <div class="message-text">谢谢！能为我设计一个移动端对话框界面吗？</div>
+                <div class="message-time">10:32</div>
+            </div>
+        </div>
+        
+        <!-- 智能体消息 -->
+        <div class="message agent">
+            <div class="avatar">AI</div>
+            <div class="message-content">
+                <div class="message-text">当然可以！我正在为您展示的就是一个移动端H5对话框界面。它具有以下特点：<br><br>1. 响应式设计，适配各种手机屏幕<br>2. 清晰的消息气泡区分用户和AI<br>3. 底部固定输入区域<br>4. 平滑的动画和交互效果<br>5. 符合移动端操作习惯</div>
+                <div class="message-time">10:33</div>
+            </div>
+        </div>
+        
+        <!-- 智能体"正在输入"状态 -->
+        <div class="message agent">
+            <div class="avatar">AI</div>
+            <div class="message-content">
+                <div class="message-text">您还可以尝试以下功能：</div>
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部输入区域 -->
+    <div class="input-container">
+        <button class="icon-button">
+            <i class="fas fa-plus"></i>
+        </button>
+        
+        <div class="input-wrapper">
+            <input type="text" class="message-input" placeholder="输入消息..." id="messageInput">
+            <button class="icon-button">
+                <i class="far fa-smile"></i>
+            </button>
+        </div>
+        
+        <button class="icon-button send-button" id="sendButton">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+
+    <script>
+        // 模拟智能体回复
+        const agentResponses = [
+            "这是一个智能体回复示例，展示了对话框的交互效果。",
+            "今天是2026年3月26日，农历丙午马年二月初八。",
+            "这个界面专为移动端设计，具有友好的触摸交互体验。",
+            "您可以通过底部的输入框发送消息，我会在这里回复您。",
+            "马年象征着活力与进取，祝您马年大吉，万事如意！"
+        ];
+        
+        // 获取DOM元素
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        
+        // 添加消息到聊天窗口
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'agent'}`;
+            
+            const time = new Date();
+            const timeString = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+            
+            messageDiv.innerHTML = `
+                <div class="avatar">${isUser ? '我' : 'AI'}</div>
+                <div class="message-content">
+                    <div class="message-text">${text}</div>
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // 模拟智能体回复
+        function simulateAgentResponse() {
+            // 显示"正在输入"状态
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.parentElement.parentElement.remove();
+            }
+            
+            // 随机选择一条回复
+            const response = agentResponses[Math.floor(Math.random() * agentResponses.length)];
+            
+            // 延迟后添加回复
+            setTimeout(() => {
+                addMessage(response, false);
+                
+                // 重新添加"正在输入"状态
+                const typingMessage = document.createElement('div');
+                typingMessage.className = 'message agent';
+                typingMessage.innerHTML = `
+                    <div class="avatar">AI</div>
+                    <div class="message-content">
+                        <div class="message-text"></div>
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                `;
+                chatContainer.appendChild(typingMessage);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000);
+        }
+        
+        // 发送消息
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text === '') return;
+            
+            // 添加用户消息
+            addMessage(text, true);
+            messageInput.value = '';
+            
+            // 模拟智能体回复
+            setTimeout(simulateAgentResponse, 500);
+        }
+        
+        // 事件监听
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // 添加示例交互
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化滚动到底部
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // 添加点击示例消息的功能
+            const agentMessages = document.querySelectorAll('.message.agent .message-text');
+            agentMessages.forEach((msg, index) => {
+                if (index > 0) { // 跳过第一条消息
+                    msg.style.cursor = 'pointer';
+                    msg.addEventListener('click', () => {
+                        messageInput.value = `关于"${msg.textContent.substring(0, 20)}..."我想了解更多`;
+                    });
+                }
+            });
+            
+            // 输入框获取焦点时自动滚动到底部
+            messageInput.addEventListener('focus', () => {
+                setTimeout(() => {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
