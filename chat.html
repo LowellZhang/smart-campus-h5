@@ -86,6 +86,32 @@
             color: #666;
         }
         
+        /* 千问按钮 */
+        .qianwen-button-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: auto;
+            margin-bottom: 10px;
+        }
+        
+        .qianwen-button {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .qianwen-button img {
+            height: 14px;
+            width: auto;
+        }
+        
         /* 聊天内容区域 */
         .chat-container {
             flex: 1;
@@ -278,6 +304,14 @@
                 <div class="message-text">千问好不好用</div>
             </div>
         </div>
+        
+        <!-- 千问按钮 -->
+        <div class="qianwen-button-container">
+            <button class="qianwen-button">
+                <img src="images/千问logo.png" alt="千问" />
+                千问
+            </button>
+        </div>
     </div>
     
     <!-- 底部输入区域 -->
@@ -334,6 +368,11 @@
             // 下载按钮点击跳转
             document.querySelector('.promo-button').addEventListener('click', function() {
                 window.location.href = 'https://m.tongyi.com/app/tongyi/tongyi-hybrid/download-guide?app_url=tongyi%3A%2F%2F%3Fsid%3Dundefined%26source_type%3Dscheme';
+            });
+            
+            // 千问按钮点击事件
+            document.querySelector('.qianwen-button').addEventListener('click', function() {
+                alert('千问服务');
             });
         });
     </script>
